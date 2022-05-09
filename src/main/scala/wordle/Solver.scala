@@ -1,5 +1,7 @@
 package wordle
 
+import java.util.Objects
+
 trait Solver {
   def requiredWeights: Int
 
@@ -8,6 +10,7 @@ trait Solver {
    * @param weights always between 0 and 1.  Different solvers have different numbers of weights and give them different meanings
    */
   def solve(target: String, weights: Seq[Double]): Solution = {
+    println(s"Target: ${target}")
     val solution = solveInner(target, weights)
 
     // Eliminate any guesses after the first solution
@@ -29,7 +32,7 @@ trait Solver {
 }
 
 object Solver {
-  def validate(guess: String, target: String): Validated = {
+  def validate(guess: String, target: String, why: Option[Score] = None): Validated = {
     val letterStates: Array[LetterState] = guess.toCharArray
       .zipWithIndex
       .map(x => {
@@ -42,6 +45,6 @@ object Solver {
         else Incorrect(letter)
       })
 
-    Validated(guess, letterStates)
+    Validated(guess, letterStates, why)
   }
 }

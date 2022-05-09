@@ -23,13 +23,14 @@ class Solver4 extends Solver {
     if (weights.length != 4) throw new IllegalArgumentException("Bad weights")
 
     val startingWordIndex = (GoodStartingWords.firstWords.length * weights(2)).toInt
-    var next = GoodStartingWords.firstWords(startingWordIndex % GoodStartingWords.firstWords.length)
+    var next: String = GoodStartingWords.firstWords(startingWordIndex % GoodStartingWords.firstWords.length)
+    var why: Option[Score] = None
     // Doing a non-functional style so we can easily look at previous guesses
     val guesses = new ArrayBuffer[Validated]()
     var words = ValidWordList.words
 
     while (guesses.size < Constants.AllowedGuesses && !solved(guesses)) {
-      val mostRecentGuess = Solver.validate(next, target)
+      val mostRecentGuess = Solver.validate(next, target, why)
       guesses.append(mostRecentGuess)
 
       if (!mostRecentGuess.solved) {
@@ -46,8 +47,8 @@ class Solver4 extends Solver {
               val round = guesses.size
               val scored = words.map(word => Solver4.score(round, word, weights))
               // for debugging val ranked = scored.sortBy(v => - v.score)
-              val best: Score = Score.pickBest(scored)
-              best.word
+              why = Some(Score.pickBest(scored))
+              why.get.word
           }
         }
         while (previousWords.contains(next))

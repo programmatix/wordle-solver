@@ -9,26 +9,6 @@ class ValidatedSpec extends AnyFunSuite {
     Validated(guess, value)
   }
 
-  test("matchesAllCorrectLetters") {
-    val v: Validated = create("lea", Seq(Incorrect('l'), Correct('e'), Correct('a')))
-    assert(v.matchesAllCorrectLetters("xea"))
-    assert(!v.matchesAllCorrectLetters("xeb"))
-  }
-
-  test("matchesAllMisplacedLetters") {
-    val v: Validated = create("lea", Seq(Incorrect('l'), Misplaced('e'), Incorrect('a')))
-    assert(!v.matchesAllMisplacedLetters("lea"))
-    assert(v.matchesAllMisplacedLetters("ela"))
-    assert(v.matchesAllMisplacedLetters("ela"))
-  }
-
-  test("matchesAllMisplacedLetters guess=STARE target=CIGAR") {
-    val v: Validated = Solver.validate("STARE", "CIGAR")
-    assert(!v.matchesAllMisplacedLetters("STARE"))
-    assert(!v.matchesAllMisplacedLetters("LANCE"))
-    assert(v.matchesAllMisplacedLetters("CIGAR"))
-  }
-
   test("matches guess=STARE target=CIGAR") {
     val v: Validated = Solver.validate("STARE", "CIGAR")
     assert(!v.matches("ABEAR"))

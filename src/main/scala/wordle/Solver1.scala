@@ -18,7 +18,7 @@ class Solver1 extends Solver {
           ValidWordList.randomWord()
         case _ =>
           val randomNext = ValidWordList.words.filter(word => {
-            validated.matchesAllCorrectLetters(word)
+            validated.matches(word)
           })
           randomNext(Math.abs(r.nextInt()) % randomNext.length)
       }

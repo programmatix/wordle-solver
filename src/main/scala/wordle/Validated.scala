@@ -1,6 +1,6 @@
 package wordle
 
-case class Validated(guess: String, letterStates: Seq[LetterState]) {
+case class Validated(guess: String, letterStates: Seq[LetterState], why: Option[Score] = None) {
   def colourisedGuess: String = {
     guess.toCharArray
       .zipWithIndex
@@ -28,92 +28,6 @@ case class Validated(guess: String, letterStates: Seq[LetterState]) {
 
   def solved: Boolean = {
     correctCount == Constants.Letters
-  }
-
-  def matchesAllCorrectLetters(word: String): Boolean = {
-    if (correctCount == 0) true
-    else {
-      val r = word.toCharArray
-        .zipWithIndex
-        .map(x => {
-          val ls = letterStates(x._2)
-          ls match {
-            case Correct(l) => l == x._1
-            case _ => true
-          }
-        })
-      // If any are false, return false
-      r.find(p => !p).getOrElse(true)
-    }
-  }
-
-  /** Want the misplaced letters to be in `word`, but not in the same places
-   * The original functional implementation.  For performance, had to be replaced with an iterative version.
-   */
-  def matchesAllMisplacedLettersFunctional(word: String): Boolean = {
-    if (misplacedCount == 0) true
-    else {
-      val r: Seq[Boolean] = letterStates
-        .zipWithIndex
-        .filter(v => v._1.isInstanceOf[Misplaced])
-        .map(v => word.contains(v._1.letter) && word.charAt(v._2) != v._1.letter)
-      // If any are false, return false
-      r.find(p => !p).getOrElse(true)
-    }
-  }
-
-  def matchesAllMisplacedLetters(word: String): Boolean = {
-    // Iterative code for performance, replacing matchesAllMisplacedLettersFunctional
-    var done = false
-    var idx = 0
-    var ret = true
-
-    while (!done && idx < letterStates.size) {
-      val ls = letterStates(idx)
-      ls match {
-        case Misplaced(letter) =>
-          ret = word.contains(letter) && word.charAt(idx) != letter
-          if (!ret) done = true
-        case _ =>
-      }
-      idx += 1
-    }
-
-    ret
-  }
-
-  /** `word` cannot have any of our incorrect letters.
-   * Return true if that's the case (everything's fine) */
-  def matchesAllIncorrectLettersFunctional(word: String): Boolean = {
-    if (incorrectCount == 0) true
-    else {
-      val foundIncorrectLetterInWord: Seq[Boolean] = letterStates
-        .zipWithIndex
-        .filter(v => v._1.isInstanceOf[Incorrect])
-        .map(v => word.contains(v._1.letter))
-      // If any are true, return false
-      !foundIncorrectLetterInWord.find(p => p).getOrElse(false)
-    }
-  }
-
-  def matchesAllIncorrectLetters(word: String): Boolean = {
-    // Iterative code for performance, replacing matchesAllIncorrectLettersFunctional
-    var done = false
-    var idx = 0
-    var ret = true
-
-    while (!done && idx < letterStates.size) {
-      val ls = letterStates(idx)
-      ls match {
-        case Incorrect(letter) =>
-          ret = !word.contains(letter)
-          if (!ret) done = true
-        case _ =>
-      }
-      idx += 1
-    }
-
-    ret
   }
 
   def matches(word: String): Boolean = {

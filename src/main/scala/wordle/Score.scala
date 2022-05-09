@@ -15,7 +15,7 @@ case class ScoreContributor(name: String,
 case class Score(word: String,
                  contributors: Seq[ScoreContributor],
                  score: Double) {
-  override def toString: String = f"${word} ${score}%.1f contrib=${contributors}"
+  override def toString: String = f"${word} ${score}%.2f contrib=${contributors}"
 }
 
 object Score {

@@ -20,7 +20,8 @@ object OneSolver {
     val weights = Range(0, solver.requiredWeights).map(_ => random.nextDouble())
     val solution = solver.solve(target, weights)
     solution.solution.zipWithIndex
-      .foreach(s => println(s"${s._2} ${s._1.colourisedGuess} ${target.toUpperCase}"))
+//      .foreach(s => println(s"${s._2} ${s._1.colourisedGuess} ${s._1.why.getOrElse("-")}"))
+      .foreach(s => println(s"${s._2} ${s._1.colourisedGuess} ${s._1.why.getOrElse("-")}"))
   }
 }
 
