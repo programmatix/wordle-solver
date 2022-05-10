@@ -7,4 +7,7 @@ lazy val root = (project in file("."))
     name := "wordle-solver"
   )
 
+// Testing
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.1" % "test"
+// Command line parsing
+libraryDependencies += "com.monovore" %% "decline" % "2.2.0"
